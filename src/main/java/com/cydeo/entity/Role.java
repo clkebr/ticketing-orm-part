@@ -4,10 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Role {
+@Entity
+@Table(name = "roles")
+public class Role extends BaseEntity{
     private Long id;
     private String description;
 
