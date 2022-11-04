@@ -23,5 +23,6 @@ public class BaseEntity {
     private Long insertUserId;
     private LocalDateTime lastUpdateDateTime;
     private Long lastUpdateUserId;
+    private boolean isDeleted = false;
 
 }
