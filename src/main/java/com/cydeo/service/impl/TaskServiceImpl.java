@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
 import com.cydeo.entity.User;
@@ -11,6 +12,7 @@ import com.cydeo.mapper.TaskMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.TaskService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -73,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long id) {
         Optional<Task> taskOptional = taskRepository.findById(id);
         if (taskOptional.isPresent()) {
-            taskOptional.get().setDeleted(true);
+            taskOptional.get().setIsDeleted(true);
             taskRepository.save(taskOptional.get());
         }
 
@@ -105,7 +107,9 @@ public class TaskServiceImpl implements TaskService {
     }
     @Override
     public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
-        User loggedInUser = userRepository.findByUserName("john@employee.com");
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User loggedInUser = userRepository.findByUserName(username);
+
         List<Task> list = taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(status, loggedInUser);
         return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
     }
@@ -124,7 +128,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> listAllTasksByStatus(Status status) {
-        User loggedInUser = userRepository.findByUserName("john@employee.com");
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User loggedInUser = userRepository.findByUserName(username);
         List<Task> list = taskRepository.findAllByTaskStatusAndAssignedEmployee(status, loggedInUser);
         return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
     }
