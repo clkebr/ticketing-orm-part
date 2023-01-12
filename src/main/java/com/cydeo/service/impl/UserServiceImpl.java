@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService{
     public void delete(String username) {
         User user = userRepository.findByUserName(username);
         if (checkIfUserCanBeDeleted(user)) {
-            user.setDeleted(true);
+            user.setIsDeleted(true);
             user.setUserName(user.getUserName() + "-" + user.getId());
             userRepository.save(user);
         }
